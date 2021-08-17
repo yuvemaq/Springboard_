@@ -35,12 +35,23 @@ exploring the data, and getting acquainted with the 3 tables. */
 Write a SQL query to produce a list of the names of the facilities that do. */
 SELECT name
 FROM Facilities 
-WHERE membercost = 0;
+WHERE membercost > 0;
+
+Answers:
+name
+Tennis Court 1
+Tennis Court 2
+Massage Room 1
+Massage Room 2
+Squash Court
 
 /* Q2: How many facilities do not charge a fee to members? */
 SELECT COUNT(*)
 FROM Facilities
 WHERE membercost = 0;
+
+Answer:
+4
 
 /* Q3: Write an SQL query to show a list of facilities that charge a fee to members,
 where the fee is less than 20% of the facility's monthly maintenance cost.
@@ -50,12 +61,25 @@ SELECT facid, name, membercost, monthlymaintenance
 FROM Facilities
 WHERE membercost > 0 
 	AND membercost < 0.2 * monthlymaintenance;
+	
+Answers:
+facid	name	membercost	monthlymaintenance	
+0	Tennis Court 1	5.0	200
+1	Tennis Court 2	5.0	200
+4	Massage Room 1	9.9	3000
+5	Massage Room 2	9.9	3000
+6	Squash Court	3.5	80
 
 /* Q4: Write an SQL query to retrieve the details of facilities with ID 1 and 5.
 Try writing the query without using the OR operator. */
 SELECT *
 FROM Facilities
 WHERE facid IN (1, 5);
+
+Answers:
+monthlymaintenance	facid	name	membercost	guestcost	initialoutlay	
+200	1	Tennis Court 2	5.0	25.0	8000
+3000	5	Massage Room 2	9.9	80.0	4000
 
 /* Q5: Produce a list of facilities, with each labelled as
 'cheap' or 'expensive', depending on if their monthly maintenance cost is
@@ -68,11 +92,27 @@ SELECT
 	ELSE 'cheap' END AS maintenance_value
 FROM Facilities;
 
+Answers:
+name	monthlymaintenance	maintenance_value	
+Tennis Court 1	200	expensive
+Tennis Court 2	200	expensive
+Badminton Court	50	cheap
+Table Tennis	10	cheap
+Massage Room 1	3000	expensive
+Massage Room 2	3000	expensive
+Squash Court	80	cheap
+Snooker Table	15	cheap
+Pool Table	15	cheap
+
 /* Q6: You'd like to get the first and last name of the last member(s)
 who signed up. Try not to use the LIMIT clause for your solution. */
 SELECT firstname, surname
 	FROM Members
 	WHERE joindate = (SELECT MAX(joindate) FROM Members);
+
+Answer:
+firstname	surname	
+Darren	Smith
 
 /* Q7: Produce a list of all members who have used a tennis court.
 Include in your output the name of the court, and the name of the member
@@ -86,6 +126,39 @@ FROM Bookings AS b
 	ON b.facid = t.facid
 WHERE b.facid IN (SELECT facid FROM Facilities WHERE name LIKE 'Tennis Court%')
 ORDER BY member_name;
+
+Answers:
+name	Member_Name	
+Tennis Court 2	Bader,Florence
+Tennis Court 1	Bader,Florence
+Tennis Court 1	Baker,Anne
+Tennis Court 2	Baker,Anne
+Tennis Court 2	Baker,Timothy
+Tennis Court 1	Baker,Timothy
+Tennis Court 1	Boothe,Tim
+Tennis Court 2	Boothe,Tim
+Tennis Court 1	Butters,Gerald
+Tennis Court 2	Butters,Gerald
+Tennis Court 1	Coplin,Joan
+Tennis Court 1	Crumpet,Erica
+Tennis Court 2	Dare,Nancy
+Tennis Court 1	Dare,Nancy
+Tennis Court 1	Farrell,David
+Tennis Court 2	Farrell,David
+Tennis Court 1	Farrell,Jemima
+Tennis Court 2	Farrell,Jemima
+Tennis Court 1	Genting,Matthew
+Tennis Court 2	GUEST,GUEST
+Tennis Court 1	GUEST,GUEST
+Tennis Court 1	Hunt,John
+Tennis Court 2	Hunt,John
+Tennis Court 1	Jones,David
+Tennis Court 2	Jones,David
+Tennis Court 1	Jones,Douglas
+Tennis Court 1	Joplette,Janice
+Tennis Court 2	Joplette,Janice
+Tennis Court 1	Owen,Charles
+Tennis Court 2	Owen,Charles
 
 /* Q8: Produce a list of bookings on the day of 2012-09-14 which
 will cost the member (or guest) more than $30. Remember that guests have
@@ -103,6 +176,20 @@ SELECT name as facility_name, CONCAT(surname, ",", firstname) AS member_name, gu
 		AND guestcost > 30
 	ORDER BY guestcost DESC;
 
+Answers:
+facility_name	member_name	guestcost	
+Massage Room 2	GUEST,GUEST	80.0
+Massage Room 1	GUEST,GUEST	80.0
+Massage Room 1	Stibbons,Ponder	80.0
+Massage Room 1	Farrell,Jemima	80.0
+Massage Room 1	Tracy,Burton	80.0
+Massage Room 2	Bader,Florence	80.0
+Massage Room 1	Smith,Jack	80.0
+Massage Room 1	Farrell,Jemima	80.0
+Massage Room 1	GUEST,GUEST	80.0
+Massage Room 1	GUEST,GUEST	80.0
+Massage Room 1	Genting,Matthew	80.0
+
 /* Q9: This time, produce the same result as in Q8, but using a subquery. */
 SELECT name as facility_name, member_name, guestcost
 	FROM Bookings AS b
@@ -112,6 +199,20 @@ SELECT name as facility_name, member_name, guestcost
 			ON b.memid = m.memid
 	WHERE b.starttime LIKE "2012-09-14%"
 	ORDER BY guestcost DESC;
+
+Answer:
+facility_name	member_name	guestcost	
+Massage Room 1	GUEST,GUEST	80.0
+Massage Room 1	Stibbons,Ponder	80.0
+Massage Room 1	Farrell,Jemima	80.0
+Massage Room 1	Tracy,Burton	80.0
+Massage Room 2	Bader,Florence	80.0
+Massage Room 1	Smith,Jack	80.0
+Massage Room 1	Farrell,Jemima	80.0
+Massage Room 1	GUEST,GUEST	80.0
+Massage Room 1	GUEST,GUEST	80.0
+Massage Room 1	Genting,Matthew	80.0
+Massage Room 2	GUEST,GUEST	80.0
 
 /* PART 2: SQLite
 /* We now want you to jump over to a local instance of the database on your machine. 
