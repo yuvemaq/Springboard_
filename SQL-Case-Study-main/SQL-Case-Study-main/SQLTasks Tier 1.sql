@@ -247,6 +247,12 @@ GROUP BY f.name
 WHERE total_revenue < 1000
 ORDER BY total_revenue;
 
+Answers:
+name	total_revenue
+0	Table Tennis	180
+1	Snooker Table	240
+2	Pool Table	270
+
 /* Q11: Produce a report of members and who recommended them in alphabetic surname,firstname order */
 SELECT m1.firstname || ' ' || m1.surname AS member_name, m2.firstname || ' ' || m2.surname AS recommender_name
            FROM members AS m1
@@ -254,6 +260,14 @@ SELECT m1.firstname || ' ' || m1.surname AS member_name, m2.firstname || ' ' || 
            	ON m1.recommendedby = m2.memid
            WHERE m1.recommendedby = m2.memid
            ORDER BY m1.surname, m1.firstname;
+
+Answers:
+	member_name	recommender_name
+0	Florence Bader	Ponder Stibbons
+1	Anne Baker	Ponder Stibbons
+2	Timothy Baker	Jemima Farrell
+3	Tim Boothe	Tim Rownam
+4	Gerald Butters	Darren Smith
 
 /* Q12: Find the facilities with their usage by member, but not guests */
 SELECT f.name, b.memid, m.firstname || ' ' || m.surname AS member_name, COUNT(b.memid) AS COUNT_member_usage
@@ -265,6 +279,14 @@ SELECT f.name, b.memid, m.firstname || ' ' || m.surname AS member_name, COUNT(b.
             WHERE b.memid != 0
             GROUP BY b.facid, b.memid;
 
+Answers:
+name	memid	member_name	COUNT_member_usage
+0	Tennis Court 1	2	Tracy Smith	30
+1	Tennis Court 1	3	Tim Rownam	6
+2	Tennis Court 1	4	Janice Joplette	19
+3	Tennis Court 1	5	Gerald Butters	57
+4	Tennis Court 1	6	Burton Tracy	31
+
 /* Q13: Find the facilities usage by month, but not guests */
 SELECT f.name AS facility_name, strftime('%m', starttime) AS month, COUNT(b.memid) AS COUNT_usage
             FROM Bookings AS b
@@ -274,3 +296,11 @@ SELECT f.name AS facility_name, strftime('%m', starttime) AS month, COUNT(b.memi
                 ON b.memid = m.memid
             WHERE b.memid != 0
             GROUP BY b.facid, month;
+
+Answers:
+facility_name	month	COUNT_usage
+0	Tennis Court 1	07	65
+1	Tennis Court 1	08	111
+2	Tennis Court 1	09	132
+3	Tennis Court 2	07	41
+4	Tennis Court 2	08	109
